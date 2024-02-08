@@ -48,15 +48,53 @@ class _ShoppingUIState extends State<ShoppingUI> {
     '1,800원',
     '4,700원',
     '13,000원',
-    '4,200원'
+    '4,200원',
   ];
-  List<bool> showProduct = [true, true, true, true, true, true, true, true, true, true];
+
+  List<bool> showProduct = [
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+  ];
+
+  List<String> filteredProductInfo = []; // 필터링된 상품 정보 목록 초기화
+  List<String> filteredProductPrice = []; // 필터링된 상품 가격 목록 초기화
+  List<String> filteredProductImage = []; // 필터링된 상품 이미지 목록 초기화
+
+  @override
+  void initState() {
+    super.initState();
+    // 초기 상태에서 모든 상품을 필터링된 목록으로 설정
+    filteredProductInfo = List.from(productInfo);
+    filteredProductPrice = List.from(productPrice);
+    filteredProductImage = List.generate(productInfo.length, (index) => 'assets/shop_gift${index + 1}.png');
+  }
 
   void filterProducts(String searchTerm) {
     setState(() {
       for (int i = 0; i < productInfo.length; i++) {
         String product = productInfo[i].toLowerCase();
         showProduct[i] = product.contains(searchTerm.toLowerCase());
+      }
+
+      // 필터링된 목록 업데이트
+      filteredProductInfo = [];
+      filteredProductPrice = [];
+      filteredProductImage = [];
+
+      for (int i = 0; i < productInfo.length; i++) {
+        if (showProduct[i]) {
+          filteredProductInfo.add(productInfo[i]);
+          filteredProductPrice.add(productPrice[i]);
+          filteredProductImage.add('assets/shop_gift${i + 1}.png'); // 이미지 파일 동적으로 설정
+        }
       }
     });
   }
@@ -124,14 +162,20 @@ class _ShoppingUIState extends State<ShoppingUI> {
                       children: [
                         Expanded(
                           child: TextField(
+                            controller: searchController,
+                            onSubmitted: (value) {
+                              filterProducts(value); // 엔터를 눌렀을 때 필터링 기능 실행
+                            },
                             decoration: InputDecoration(
                               border: InputBorder.none,
                               hintText: '상품 검색하기',
-                              prefixIcon: Icon(Icons.search),
+                              prefixIcon: IconButton(
+                                icon: Icon(Icons.search),
+                                onPressed: () {
+                                  filterProducts(searchController.text); // 돋보기 아이콘을 눌렀을 때 필터링 기능 실행
+                                },
+                              ),
                             ),
-                            onChanged: (value) {
-                              filterProducts(value);
-                            },
                           ),
                         ),
                       ],
@@ -174,7 +218,7 @@ class _ShoppingUIState extends State<ShoppingUI> {
                         ),
                       );
                     },
-                    child: Text('구매\n목록'),
+                    child: Text('구매\n내역'),
                   ),
                 ),
               ],
@@ -198,22 +242,21 @@ class _ShoppingUIState extends State<ShoppingUI> {
                 padding: EdgeInsets.all(16.0),
                 gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                   crossAxisCount: 2,
-                  childAspectRatio: 1 / 1.5,
+                  childAspectRatio: 1 / 1.3,
                   crossAxisSpacing: 16,
                   mainAxisSpacing: 16,
                 ),
-                itemCount: productInfo.length,
+                itemCount: filteredProductInfo.length, // 필터링된 상품 개수로 수정
                 itemBuilder: (BuildContext context, int index) {
-                  return showProduct[index]
-                      ? GestureDetector(
+                  return GestureDetector(
                     onTap: () {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
                           builder: (context) => ProductDetail(
-                            product: productInfo[index],
-                            image: 'assets/shop_gift${index + 1}.png',
-                            price: productPrice[index],
+                            product: filteredProductInfo[index], // 필터링된 상품 정보 사용
+                            image: filteredProductImage[index], // 필터링된 상품 이미지 사용
+                            price: filteredProductPrice[index], // 필터링된 상품 가격 사용
                             description: '상품 설명을 여기에 추가하세요.',
                           ),
                         ),
@@ -221,30 +264,30 @@ class _ShoppingUIState extends State<ShoppingUI> {
                     },
                     child: Card(
                       elevation: 2.0,
-                      child: Padding( // Padding 추가
-                        padding: EdgeInsets.symmetric(horizontal: 12.0, vertical: 4.0), // 가로 여백은 12.0, 세로 여백은 4.0으로 수정
+                      child: Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 12.0, vertical: 4.0),
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: <Widget>[
                             Image.network(
-                              'assets/shop_gift${index + 1}.png',
+                              filteredProductImage[index], // 이미지 파일 동적으로 설정
                               fit: BoxFit.contain,
                             ),
-                            SizedBox(height: 8.0), // 이미지와 나머지 사항 사이에 간격 추가
+                            SizedBox(height: 8.0),
                             Text(
-                              productInfo[index],
+                              filteredProductInfo[index],
                               style: TextStyle(
                                 fontWeight: FontWeight.bold,
                                 fontSize: 16.0,
                               ),
                             ),
-                            SizedBox(height: 8.0), // 상품명과 가격 사이에 간격 추가
+                            SizedBox(height: 8.0),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 Text(
-                                  productPrice[index],
+                                  filteredProductPrice[index],
                                   style: TextStyle(
                                     color: Colors.black,
                                     fontWeight: FontWeight.bold,
@@ -260,8 +303,7 @@ class _ShoppingUIState extends State<ShoppingUI> {
                         ),
                       ),
                     ),
-                  )
-                      : Container();
+                  );
                 },
               ),
             ),

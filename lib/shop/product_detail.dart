@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import '../widget/baseappbar.dart';
 import '../widget/bottomNavi.dart';
 import 'purchase_history.dart';
@@ -98,63 +97,109 @@ class ProductDetail extends StatelessWidget {
                           SizedBox(height: 24.0),
                           ElevatedButton(
                             style: ElevatedButton.styleFrom(
-                              primary: Colors.black,
+                              primary: Colors.black, // 배경색을 검정으로 설정
                               minimumSize: Size(double.infinity, 56),
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(10.0),
                               ),
                             ),
                             onPressed: () {
-                              bool isPointEnough = checkPoint();
-
-                              if (isPointEnough) {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => PurchaseComplete(
-                                      productName: product,
-                                      productPrice: price,
+                              showDialog(
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return AlertDialog(
+                                    title: Center(
+                                      child: Text(
+                                        '정말 구매하시겠습니까?',
+                                        style: TextStyle(
+                                          fontSize: 20.0,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
                                     ),
-                                  ),
-                                );
-                              } else {
-                                showDialog(
-                                  context: context,
-                                  builder: (BuildContext context) {
-                                    return AlertDialog(
-                                      content: Column(
-                                        mainAxisSize: MainAxisSize.min,
-                                        children: [
-                                          Text(
-                                            '포인트가 부족하여 구매할 수 없습니다.',
-                                            style: TextStyle(
-                                              fontSize: 20.0,
-                                              fontWeight: FontWeight.bold, // 글씨체를 bold로 설정
-                                            ),
+                                    actions: [
+                                      TextButton(
+                                        onPressed: () {
+                                          Navigator.of(context).pop();
+                                        },
+                                        child: Text(
+                                          '취소',
+                                          style: TextStyle(
+                                            fontSize: 16.0,
+                                            fontWeight: FontWeight.bold,
+                                            color: Colors.grey[700],
                                           ),
-                                          SizedBox(height: 16.0),
-                                          Align(
-                                            alignment: Alignment.centerRight, // 오른쪽 정렬
-                                            child: ElevatedButton(
-                                              style: ElevatedButton.styleFrom(
-                                                primary: Colors.black, // 버튼 배경색
-                                                onPrimary: Colors.white, // 버튼 텍스트 색상
-                                                shape: RoundedRectangleBorder(
-                                                  borderRadius: BorderRadius.circular(10.0),
+                                        ),
+                                      ),
+                                      ElevatedButton(
+                                        style: ElevatedButton.styleFrom(
+                                          primary: Colors.white, // 배경색을 흰색으로 설정
+                                          onPrimary: Colors.black, // 글자색을 검은색으로 설정
+                                        ),
+                                        onPressed: () {
+                                          bool isPointEnough = checkPoint();
+
+                                          if (isPointEnough) {
+                                            Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (context) => PurchaseComplete(
+                                                  productName: product,
+                                                  productPrice: price,
                                                 ),
                                               ),
-                                              onPressed: () {
-                                                Navigator.of(context).pop();
+                                            );
+                                          } else {
+                                            Navigator.of(context).pop();
+                                            showDialog(
+                                              context: context,
+                                              builder: (BuildContext context) {
+                                                return AlertDialog(
+                                                  content: Column(
+                                                    mainAxisSize: MainAxisSize.min,
+                                                    children: [
+                                                      Text(
+                                                        '포인트가 부족하여 구매할 수 없습니다.',
+                                                        style: TextStyle(
+                                                          fontSize: 20.0,
+                                                          fontWeight: FontWeight.bold,
+                                                        ),
+                                                      ),
+                                                      SizedBox(height: 16.0),
+                                                      Align(
+                                                        alignment: Alignment.centerRight,
+                                                        child: ElevatedButton(
+                                                          onPressed: () {
+                                                            Navigator.of(context).pop();
+                                                          },
+                                                          child: Text(
+                                                              '확인',
+                                                            style: TextStyle(
+                                                              color: Colors.black,
+                                                              fontWeight: FontWeight.bold,
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                );
                                               },
-                                              child: Text('확인'),
-                                            ),
+                                            );
+                                          }
+                                        },
+                                        child: Text(
+                                          '구매하기',
+                                          style: TextStyle(
+                                            fontSize: 16.0,
+                                            fontWeight: FontWeight.bold,
                                           ),
-                                        ],
+                                        ),
                                       ),
-                                    );
-                                  },
-                                );
-                              }
+                                    ],
+                                  );
+                                },
+                              );
                             },
                             child: Text(
                               '구매하기',
@@ -184,6 +229,6 @@ class ProductDetail extends StatelessWidget {
   }
 
   bool checkPoint() {
-    return true;
+    return false;
   }
 }

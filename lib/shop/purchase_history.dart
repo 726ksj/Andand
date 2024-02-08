@@ -26,7 +26,7 @@ class PurchaseHistory extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  '구매 목록',
+                  '구매 내역',
                   style: TextStyle(
                     fontSize: 24.0,
                     fontWeight: FontWeight.bold,
@@ -80,14 +80,14 @@ class PurchaseHistory extends StatelessWidget {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Text(
-                              '',
+                              '가격: $productPrice',
                               style: TextStyle(
                                 fontWeight: FontWeight.bold,
                                 fontSize: 14.0,
                               ),
                             ),
                             Text(
-                              '가격: $productPrice',
+                              '구매일: ${DateFormat('yyyy.MM.dd').format(DateTime.now())}',
                               style: TextStyle(
                                 fontWeight: FontWeight.bold,
                                 fontSize: 14.0,
@@ -101,7 +101,6 @@ class PurchaseHistory extends StatelessWidget {
                 ],
               ),
             ),
-
           ],
         ),
       ),

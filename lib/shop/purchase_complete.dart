@@ -1,3 +1,4 @@
+import 'package:andand/shop/product_list.dart';
 import 'package:andand/shop/purchase_history.dart';
 import 'package:flutter/material.dart';
 import '../widget/baseappbar.dart';
@@ -55,19 +56,14 @@ class PurchaseComplete extends StatelessWidget {
               children: [
                 ElevatedButton(
                   onPressed: () {
-                    // 'PurchaseHistory' 페이지로 이동하면서 상품명과 가격 전달
-                    Navigator.push(
+                    Navigator.pushAndRemoveUntil(
                       context,
-                      MaterialPageRoute(
-                        builder: (context) => PurchaseHistory(
-                          productName: productName,  // 상품명 전달
-                          productPrice: productPrice,   // 가격 전달
-                        ),
-                      ),
+                      MaterialPageRoute(builder: (context) => ShoppingUI()), // 첫 번째 페이지로 이동
+                          (Route<dynamic> route) => false, // 이전에 쌓인 모든 페이지들을 제거
                     );
                   },
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Color(0xFF87BD9D), // '87BD9D' 색상
+                    backgroundColor: Color(0xFF87BD9D),
                     minimumSize: Size(300, 56),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(8.0),
@@ -81,7 +77,8 @@ class PurchaseComplete extends StatelessWidget {
                       color: Colors.white,
                     ),
                   ),
-                ),
+                )
+
               ],
             ),
           ),

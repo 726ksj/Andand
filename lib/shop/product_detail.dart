@@ -229,6 +229,6 @@ class ProductDetail extends StatelessWidget {
   }
 
   bool checkPoint() {
-    return false;
+    return true;
   }
 }

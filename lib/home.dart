@@ -90,10 +90,10 @@ class _MyHomePageState extends State<MyHomePage> {
                             ],
                           ),
                         ),
-                        Container(child: Text("datasssss"),color: Colors.white,height: screenHeight*0.2,)
+                        Container(child: Text("datasssss"),color: Colors.white,height: screenHeight*0.1,)
                       ],
                     ),
-                    Positioned(top: 160, left: screenWidth*0.05,
+                    Positioned(top: 170, left: screenWidth*0.05,
                         child: Container(child: Text("성공일수",
                             style: TextStyle(
                             color: Color(0xFFADADAD),
